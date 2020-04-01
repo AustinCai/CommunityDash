@@ -13,19 +13,29 @@ class ReactWelcome extends React.Component {
   }
 }
 
-class TestButton extends React.Component {
+class Button extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      count: 0,
+      clickCount: 0,
     }
   }
 
   async handleClick() {
     this.setState({
-      count: this.state.count + 1
+      clickCount: this.state.count + 1
     })
+  }
 
+  render() {
+    return <button onClick={() => this.handleClick()}>{this.props.ButtonText}</button>
+    
+  }
+}
+
+class TestButton extends Button {
+  async handleClick() {
     try {
       const res = await fetch('http://localhost:9000/button');
       if (res.ok){
@@ -38,18 +48,9 @@ class TestButton extends React.Component {
       console.log(error);
     }
   }
-
-  render() {
-    return (
-      <div>
-        <button onClick={() => this.handleClick()}>Hello world</button>
-        <p>{this.state.count}</p>
-      </div>
-    )
-  }
 }
 
-class LoginButton extends React.Component {
+class LoginButton extends Button {
   async handleClick() {
     try {
       const res = await fetch('http://localhost:9000/login', {
@@ -69,39 +70,15 @@ class LoginButton extends React.Component {
       console.log(error);
     }
   }
-
-  render() {
-    return (
-      <div>
-        <button onClick={() => this.handleClick()}>Login</button>
-      </div>
-    )
-  }
 }
 
 class Body extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { apiResponse: ""};
-  }
-
-  callAPI() {
-    fetch("http://localhost:9000/testAPI")
-      .then(res => res.text())
-      .then(res => this.setState({ apiResponse: res}))
-      .catch(err => err);
-  }
-
-  componentDidMount() {
-    this.callAPI();
-  }
 
   render() {
     return (
       <div className="Body">
-        <p className="App-intro">{this.state.apiResponse}</p>
-        <TestButton/>
-        <LoginButton/>
+        <TestButton ButtonText = "Hello world"/>
+        <LoginButton ButtonText = "Login2"/>
       </div>
     )
   }
