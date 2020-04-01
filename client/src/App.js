@@ -13,6 +13,41 @@ class ReactWelcome extends React.Component {
   }
 }
 
+class TestButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0,
+    }
+  }
+
+  async handleClick() {
+    this.setState({
+      count: this.state.count + 1
+    })
+
+    try {
+      const response = await fetch('http://localhost:9000/button');
+      if (response.ok) {
+        const jsonResponse = await response.json();
+      }
+      console.log(response);
+      throw new Error('Request failed!');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={() => this.handleClick()}>Hello world</button>
+        <p>{this.state.count}</p>
+      </div>
+    )
+  }
+}
+
 class Body extends React.Component {
   constructor(props) {
     super(props);
@@ -34,16 +69,13 @@ class Body extends React.Component {
     return (
       <div className="Body">
         <p className="App-intro">{this.state.apiResponse}</p>
+        <TestButton/>
       </div>
     )
   }
 }
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div className="App">
