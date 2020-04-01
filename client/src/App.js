@@ -27,13 +27,14 @@ class TestButton extends React.Component {
     })
 
     try {
-      const response = await fetch('http://localhost:9000/button');
-      if (response.ok) {
-        const jsonResponse = await response.json();
+      const res = await fetch('http://localhost:9000/button');
+      if (res.ok){
+        const resText = await res.text();
+        console.log(resText)
+      } else {
+        throw new Error('Request failed!');
       }
-      console.log(response);
-      throw new Error('Request failed!');
-    } catch (error) {
+    } catch (error){
       console.log(error);
     }
   }
@@ -43,6 +44,36 @@ class TestButton extends React.Component {
       <div>
         <button onClick={() => this.handleClick()}>Hello world</button>
         <p>{this.state.count}</p>
+      </div>
+    )
+  }
+}
+
+class LoginButton extends React.Component {
+  async handleClick() {
+    try {
+      const res = await fetch('http://localhost:9000/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          username: "austin",
+          password: "querty",
+        })
+      });
+      if (res.ok){
+        const resText = await res.text();
+        console.log(resText)
+      } else {
+        throw new Error('Request failed!');
+      }
+    } catch (error){
+      console.log(error);
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={() => this.handleClick()}>Login</button>
       </div>
     )
   }
@@ -70,6 +101,7 @@ class Body extends React.Component {
       <div className="Body">
         <p className="App-intro">{this.state.apiResponse}</p>
         <TestButton/>
+        <LoginButton/>
       </div>
     )
   }
