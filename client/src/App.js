@@ -1,40 +1,18 @@
-import React, { Component } from "react";
+import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import {Button, TestButton} from "./Buttons";
 
 class ReactWelcome extends React.Component {
   render() {
     return (
       <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React!</h1>
+          <h1 className="App-title">Welcome to CommunityDash!</h1>
       </header>
     )
   }
 }
 
-class Button extends React.Component {
-  render() {
-    return <button onClick={() => this.handleClick()}>{this.props.ButtonText}</button>
-    
-  }
-}
-
-class TestButton extends Button {
-  async handleClick() {
-    try {
-      const res = await fetch('http://localhost:9000/button');
-      if (res.ok){
-        const resText = await res.text();
-        console.log(resText)
-      } else {
-        throw new Error('Request failed!');
-      }
-    } catch (error){
-      console.log(error);
-    }
-  }
-}
 
 class TestForm extends React.Component {
   
@@ -92,22 +70,23 @@ class TestForm extends React.Component {
           Name:
           <input type="text" value={this.state.username} onChange={this.handleChange}/>
         </label>
+        <br/>
         <label>
           Password:
           <input type="text" value={this.state.password} onChange={this.handlePasswordChange}/>
         </label>
+        <br/>
         <input type="submit" value="Submit"/>
       </form>
     );
   }
 }
 
-class App extends Component {
+class App extends React.Component {
     render() {
         return (
             <div className="App">
                 <ReactWelcome/>
-                <TestButton ButtonText = "Test Button (counts number of clicks)"/>
                 <TestForm/>
             </div>
         );
