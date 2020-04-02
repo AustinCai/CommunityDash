@@ -3,8 +3,15 @@ var router = express.Router();
 var multer = require("multer");
 var upload = multer();
 
+router.use(upload.array());
+
 let accounts = [];
 let accountId = 0;
+
+router.get("/", (req, res, next) => {
+  res.send(accounts.map(acc => acc.username));
+})
+
 
 function checkLogin(query){
   if (query.username && query.password){
@@ -18,10 +25,8 @@ function checkLogin(query){
   }
 }
 
-router.use(upload.array());
+
 router.post("/", (req, res, next) => {
-  console.log(req);
-  // console.log(req.body.username, req.body.password);
   const receivedInfo = checkLogin(req.body);
   if (receivedInfo !== -1) {
     accounts.push(receivedInfo);
@@ -33,16 +38,5 @@ router.post("/", (req, res, next) => {
   }
 });
 
-// router.post("/", function(req, res, next) {
-//   const receivedInfo = checkLogin(req.query);
-//   if (receivedInfo !== -1) {
-//     accounts.push(receivedInfo);
-//     res.status(201).send(receivedInfo);
-//     console.log("success");
-//     console.log(accounts);
-//   } else {
-//     res.status(400).send();
-//   }
-// });
 
 module.exports = router;
