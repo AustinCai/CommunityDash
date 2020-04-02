@@ -20,6 +20,7 @@ function checkLogin(query){
 
 router.use(upload.array());
 router.post("/", (req, res, next) => {
+  console.log(req);
   // console.log(req.body.username, req.body.password);
   const receivedInfo = checkLogin(req.body);
   if (receivedInfo !== -1) {

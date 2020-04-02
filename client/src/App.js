@@ -65,6 +65,9 @@ class TestForm extends React.Component {
     try {
       const res = await fetch('http://localhost:9000/login', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           username: this.state.username,
           password: this.state.password,
