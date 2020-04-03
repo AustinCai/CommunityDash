@@ -14,12 +14,14 @@ router.get("/signup", (req, res, next) => {
 router.post(
     "/signup",
     [
-        check("username", "Please Enter a Valid Username")
-        .not().isEmpty(),
+        // check("username", "Please Enter a Valid Username").not().isEmpty(),
         check("email", "Please enter a valid email").isEmail(),
         check("password", "Please enter a valid password").isLength({
             min: 6
-        })
+        }),
+        check("firstName", "Please Enter a Valid Username").not().isEmpty(),
+        check("lastName", "Please Enter a Valid Username").not().isEmpty(),
+        check("zipcode", "Please Enter a Valid Username").not().isEmpty(),
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -30,9 +32,11 @@ router.post(
         }
 
         const {
-            username,
             email,
-            password
+            password,
+            firstName,
+            lastName,
+            zipcode
         } = req.body;
         try {
             let user = await User.findOne({
@@ -45,9 +49,11 @@ router.post(
             }
 
             user = new User({
-                username,
                 email,
-                password
+                password,
+                firstName,
+                lastName,
+                zipcode
             });
 
             const salt = await bcrypt.genSalt(10);
