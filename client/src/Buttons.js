@@ -2,8 +2,8 @@ import React from "react";
 
 export class Button extends React.Component {
   render() {
-    return <button onClick={() => this.handleClick()}>{this.props.ButtonText}</button>
-    
+
+    return <button onClick={() => this.handleClick()}>{this.props.ButtonText}</button> 
   }
 }
 
@@ -22,3 +22,11 @@ export class TestButton extends Button {
     }
   }
 }
+
+export class DummyButton extends Button {
+  handleClick() {
+    console.log("click!");
+  }
+}
+
+Button.defaultProps = {ButtonText: 'Untitled Button'};

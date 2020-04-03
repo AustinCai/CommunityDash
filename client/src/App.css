@@ -13,6 +13,10 @@
   }
 }
 
+.paddedDiv {
+  padding-top: 50px;
+}
+
 .App-header {
   background-color: maroon;
   min-height: 50vh;
