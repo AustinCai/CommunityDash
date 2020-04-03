@@ -35,13 +35,13 @@ function LoginScreen(props) {
             <h1 className="App-title">Welcome to CommunityDash!</h1>
         </header>
         <div className="paddedDiv">
-          <LoginForm endpoint='http://localhost:9000/login'/>
+          <LoginForm endpoint='http://localhost:9000/user/login'/>
         </div>
         <Link to={'/home'}>
           <DummyButton ButtonText="sudo Login"/>
         </Link>
         <Popup modal trigger={<button>Register</button>}>
-          <RegisterForm endpoint='http://localhost:9000/login'/>
+          <RegisterForm endpoint='http://localhost:9000/user/signup'/>
         </Popup>
       </div>
     );
