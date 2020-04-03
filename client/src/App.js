@@ -2,7 +2,7 @@ import React from "react";
 import Popup from "reactjs-popup";
 import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
 
-import {DummyButton} from "./Buttons";
+import {DummyButton, TestButton} from "./Buttons";
 import {LoginForm, RegisterForm} from "./Forms";
 
 import "./App.css";
@@ -36,6 +36,7 @@ function LoginScreen(props) {
         </header>
         <div className="paddedDiv">
           <LoginForm endpoint='http://localhost:9000/user/login'/>
+          <TestButton />
         </div>
         <Link to={'/home'}>
           <DummyButton ButtonText="sudo Login"/>

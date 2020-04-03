@@ -27,15 +27,13 @@ export class LoginForm extends React.Component {
     event.preventDefault();
 
     try {
+      console.log(JSON.stringify(this.state));
       const res = await fetch(this.props.endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: this.state.email,
-          password: this.state.password,
-        })
+        body: JSON.stringify(this.state)
       });
       if (res.ok){
         const resText = await res.text();
@@ -72,12 +70,28 @@ export class RegisterForm extends LoginForm {
   constructor(props){
     super(props);
     this.state = {
-      firstName: '',
-      lastName: '',
       email: '',
       password: '',
-      zipCode: '',
+      firstName: '',
+      lastName: '',
+      zipcode: '',
     };
+
+    this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
+    this.handleLastNameChange = this.handleLastNameChange.bind(this);
+    this.handleZipCodeChange = this.handleZipCodeChange.bind(this);
+  }
+
+  handleFirstNameChange(event) {
+    this.setState({firstName: event.target.value});
+  }
+
+  handleLastNameChange(event) {
+    this.setState({lastName: event.target.value});
+  }
+
+  handleZipCodeChange(event) {
+    this.setState({zipcode: event.target.value});
   }
 
   render() {
@@ -85,12 +99,12 @@ export class RegisterForm extends LoginForm {
       <form onSubmit={this.handleSubmit}>
         <label>
           First Name:
-          <input type="text"/>
+          <input type="text" onChange={this.handleFirstNameChange}/>
         </label>
         <br/>
         <label>
           Last Name:
-          <input type="text"/>
+          <input type="text" onChange={this.handleLastNameChange}/>
         </label>
         <br/>
         <label>
@@ -109,7 +123,7 @@ export class RegisterForm extends LoginForm {
         </label>
         <label>
           ZIP Code:
-          <input type="text"/>
+          <input type="text" onChange={this.handleZipCodeChange}/>
         </label>
         <br/>
         <input type="submit" value="Register"/>
