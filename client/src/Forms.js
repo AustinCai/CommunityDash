@@ -5,17 +5,17 @@ export class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
+      email: '',
       password: '',
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({username: event.target.value});
+  handleEmailChange(event) {
+    this.setState({email: event.target.value});
   }
 
   handlePasswordChange(event) {
@@ -23,17 +23,17 @@ export class LoginForm extends React.Component {
   }
 
   async handleSubmit(event) {
-    console.log('A name was submitted: ' + this.state.username + ", with password: " + this.state.password);
+    console.log('A name was submitted: ' + this.state.email + ", with password: " + this.state.password);
     event.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:9000/login', {
+      const res = await fetch(this.props.endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: this.state.username,
+          email: this.state.email,
           password: this.state.password,
         })
       });
@@ -53,8 +53,8 @@ export class LoginForm extends React.Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <label>
-          Name:
-          <input type="text" value={this.state.username} onChange={this.handleChange}/>
+          Email:
+          <input type="text" value={this.state.email} onChange={this.handleEmailChange}/>
         </label>
         <br/>
         <label>
@@ -63,6 +63,56 @@ export class LoginForm extends React.Component {
         </label>
         <br/>
         <input type="submit" value="Login"/>
+      </form>
+    );
+  }
+}
+
+export class RegisterForm extends LoginForm {
+  constructor(props){
+    super(props);
+    this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      zipCode: '',
+    };
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          First Name:
+          <input type="text"/>
+        </label>
+        <br/>
+        <label>
+          Last Name:
+          <input type="text"/>
+        </label>
+        <br/>
+        <label>
+          Email:
+          <input type="text" value={this.state.email} onChange={this.handleEmailChange}/>
+        </label>
+        <br/>
+        <label>
+          Password:
+          <input type="text" value={this.state.password} onChange={this.handlePasswordChange}/>
+        </label>
+        <br/>
+        <label>
+          Confirm Password:
+          <input type="text"/>
+        </label>
+        <label>
+          ZIP Code:
+          <input type="text"/>
+        </label>
+        <br/>
+        <input type="submit" value="Register"/>
       </form>
     );
   }

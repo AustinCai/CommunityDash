@@ -1,15 +1,16 @@
 import React from "react";
+import Popup from "reactjs-popup";
 import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
 
 import {DummyButton} from "./Buttons";
-import {LoginForm} from "./Forms";
+import {LoginForm, RegisterForm} from "./Forms";
 
 import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function HomeScreen(props) {
   return (
-    <div className="row" style={{'background-color': 'blue'}}>
+    <div className="row" style={{'background-color': 'maroon'}}>
       <div className='col-1'/>
       <div className="col-5" style={{'background-color': 'white', 'margin': "10px", 'margin-left': '0px'}}>
         <h1> Forum </h1>
@@ -34,16 +35,17 @@ function LoginScreen(props) {
             <h1 className="App-title">Welcome to CommunityDash!</h1>
         </header>
         <div className="paddedDiv">
-          <LoginForm/>
+          <LoginForm endpoint='http://localhost:9000/login'/>
         </div>
         <Link to={'/home'}>
           <DummyButton ButtonText="sudo Login"/>
         </Link>
+        <Popup modal trigger={<button>Register</button>}>
+          <RegisterForm endpoint='http://localhost:9000/login'/>
+        </Popup>
       </div>
     );
 }
-
-
 
 class App extends React.Component {
     render() {
