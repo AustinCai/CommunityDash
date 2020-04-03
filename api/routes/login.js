@@ -2,8 +2,10 @@ var express = require("express");
 var router = express.Router();
 var multer = require("multer");
 var upload = multer();
+var bodyParser = require("body-parser");
 
 router.use(upload.array());
+router.use(bodyParser.json());
 
 let accounts = [];
 let accountId = 0;
