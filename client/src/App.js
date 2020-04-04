@@ -36,7 +36,6 @@ function LoginScreen(props) {
         </header>
         <div className="paddedDiv">
           <LoginForm endpoint='http://localhost:9000/user/login'/>
-          <TestButton />
         </div>
         <Link to={'/home'}>
           <DummyButton ButtonText="sudo Login"/>
