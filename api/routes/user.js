@@ -3,14 +3,17 @@ const { check, validationResult} = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const {ObjectId} = require("mongodb");
 
 const User = require("../database/model/User");
 const auth = require("../middleware/auth");
 
+// Check that '\user' path is accessible
 router.get("/signup", (req, res, next) => {
   res.send("signup router success");
 })
 
+// Create new user and add to `users` collection, responding with token
 router.post(
     "/signup",
     [
@@ -19,9 +22,9 @@ router.post(
         check("password", "Please enter a valid password").isLength({
             min: 6
         }),
-        check("firstName", "Please Enter a Valid Username").not().isEmpty(),
-        check("lastName", "Please Enter a Valid Username").not().isEmpty(),
-        check("zipcode", "Please Enter a Valid Username").not().isEmpty(),
+        check("firstName", "Please Enter a valid first name").not().isEmpty(),
+        check("lastName", "Please Enter a valid last name").not().isEmpty(),
+        check("zipcode", "Please Enter a zipcode").not().isEmpty(),
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -86,6 +89,7 @@ router.post(
     }
 );
 
+// Authenticate user given email and password, responding with a secure token
 router.post(
   "/login",
   [
@@ -147,6 +151,7 @@ router.post(
   }
 );
 
+// Authenticates secure token in header and responds with user information
 router.get("/me", auth, async (req, res) => {
   try {
     // request.user is getting fetched from Middleware after token authentication
@@ -155,6 +160,22 @@ router.get("/me", auth, async (req, res) => {
   } catch (e) {
     res.send({ message: "Error in Fetching user" });
   }
+});
+
+// Retrieve user information given user ObjectId, omitting password
+router.get("/whoami/:id", (req, res, next) => {
+  let id = new ObjectId(req.params.id);
+  User.findOne({"_id": id}, {"password": 0}, (err, user) => {
+    if (user && user._id) {
+      console.log("Found user!")
+      res.send(user);
+    } else if (err) {
+      res.status(500).send(err.message);
+      console.log(err.message);
+    } else {
+      res.status(404).send("User not found");
+    }
+  });
 });
 
 module.exports = router;
