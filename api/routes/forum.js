@@ -71,10 +71,10 @@ router.post("/post",
   }
 );
 
-// Return postId, userId, and location given tag
+// Return postId, userId, and zipcode given tag
 router.get("/tag/:tag", (req, res, next) => {
   let tag = req.params.tag;
-  Post.find({"tag": tag}, '_id user_id location', (err, posts) => {
+  Post.find({"tag": tag}, '_id user_id zipcode', (err, posts) => {
     if  (posts.length >= 1) {
       console.log("Found post(s)");
       res.send(posts);
