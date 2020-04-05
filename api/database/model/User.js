@@ -21,6 +21,10 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  forumPosts : {
+    type: Array,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now()

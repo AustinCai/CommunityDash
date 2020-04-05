@@ -22,7 +22,7 @@ const PostSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    location: {
+    zipcode: {
         type: Number,
         required: true
     },
