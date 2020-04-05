@@ -1,6 +1,10 @@
 import React from "react";
 import Popup from "reactjs-popup";
 import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
+import Modal from 'react-bootstrap/Modal';
+
+import Button from "react-bootstrap/Button";
+import From from "react-bootstrap/Form";
 
 import {DummyButton, TestButton} from "./Buttons";
 import {LoginForm, RegisterForm} from "./Forms";
@@ -10,6 +14,16 @@ import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class LoginScreen extends React.Component {
+  constructor(props){ 
+    super(props);
+    this.state = {
+      show: false,
+    };
+  }
+
+  handleShow = () => this.setState({show: true});
+  handleClose = () => this.setState({show: false});
+
   render(){
     return (
       <div className="App">
@@ -19,12 +33,22 @@ class LoginScreen extends React.Component {
         <div className="paddedDiv">
           <LoginForm onAuthenticate={this.props.onAuthenticate} onProfileFetch={this.props.onProfileFetch} endpoint='http://localhost:9000/user/login'/>
         </div>
-        <Popup modal trigger={<button>Register</button>}>
-          <RegisterForm endpoint='http://localhost:9000/user/signup'/>
-        </Popup>
+
+        <Modal show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Register Account</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <RegisterForm endpoint='http://localhost:9000/user/signup'/>
+          </Modal.Body>
+        </Modal>
+
+        <br/>
+        <Button onClick={this.handleShow}>Register</Button>
       </div>
     );
   }
+
 }
 
 class App extends React.Component {
