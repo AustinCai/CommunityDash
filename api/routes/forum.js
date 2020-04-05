@@ -4,6 +4,9 @@ const { ObjectId } = require("mongodb");
 
 const Post = require("../database/postModel/Post");
 
+const User = require("../database/model/User");
+
+
 // Display posts, in server, and welcome message
 router.get("/", (req, res, next) => {
   // res.send("Welcome to the Forum Database!");
@@ -29,7 +32,7 @@ router.post("/post", (req, res, next) => {
     location
   } = req.body;
 
-  //Add validator here
+  //#TODO: Add validator here
   
   try {
     const post = new Post({
@@ -42,6 +45,9 @@ router.post("/post", (req, res, next) => {
     });
   
     post.save();
+    
+    //#TODO: Add this post to user's list of posts
+
     res.send(post);
   } catch (e) {
     console.log(e.message);
@@ -53,28 +59,52 @@ router.post("/post", (req, res, next) => {
 router.get("/tag/:tag", (req, res, next) => {
   let tag = req.params.tag;
   console.log(`Results for tag: ${tag}`);
-  Post.find({"tag": tag}, 'user_id', (err, posts) => {
-    if (err) {
+  Post.findOne({"tag": tag}, '_id user_id location', (err, posts) => {
+    if  (!posts) {
+      res.status(404).send("Post(s) with tag not found");
+    } else if (err) {
       console.log(err.message);
       res.send(`Posts with tag ${tag} cannot be found.`)
+    } else {
+      res.send(posts);
     }
-    res.send(posts);
   })
 })
 
+// Retrieve post from post id
 router.get("/post/:id", (req, res, next) => {
   let id = new ObjectId(req.params.id);
-  console.log(`Results for id: ${id}`);
-  Post.find({"_id": id}, (err, post) => {
-    if (err) {
+  console.log(`Results for post id: ${id}`);
+  Post.findOne({"_id": id}, (err, post) => {
+    if (post && post._id) {
+      console.log("Post: ", post);
+      res.send(post);
+    } else if (err) {
       res.status(500).send(err.message);
       console.log(err.message);
-    } else if (post) {
-      res.send(post);
     } else {
       res.status(404).send("Post not found");
     }
   });
 })
+
+// Retrieve user given post id
+router.get("/post/user/:id", (req, res, next) => {
+  let id = new ObjectId(req.params.id);
+  console.log(`Results for user id: ${id}`);
+  User.findOne({"_id": id}, (err, user) => {
+    if (user) {
+      console.log("User: ",user);
+      res.send(user);
+    } else if (err) {
+      res.status(500).send(err.message);
+      console.log(err.message);
+    } else {
+      console.log("User not found");
+      res.status(404).send("User not found");
+    }
+  });
+})
+
 
 module.exports = router;
