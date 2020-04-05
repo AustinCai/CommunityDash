@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { ObjectId } = require("mongodb"); 
-const { check, validationResult} = require("express-validator");
+const { check } = require("express-validator");
 
 const Post = require("../database/postModel/Post");
 const User = require("../database/model/User");
@@ -20,6 +20,7 @@ router.get("/", (req, res, next) => {
 })
 
 // Create new post in posts collection of test database 
+// UserId and tag should be supplied by front end
 router.post("/post", 
   [
       check("email", "Please enter a valid email").isEmail(),
@@ -36,8 +37,6 @@ router.post("/post",
       tag,
       zipcode
     } = req.body;
-
-    //#TODO: Add validator here
     
     try {
       const post = new Post({
@@ -51,7 +50,6 @@ router.post("/post",
     
       post.save();
       
-      //#TODO: Add this post to user's list of posts
       User.updateOne(
         {"_id": post.user_id}, 
         {
@@ -62,6 +60,7 @@ router.post("/post",
           res.status(500).send(err.message);
           console.log(err.message);
         }
+        console.log("Successfully updated user info!");
       });
 
       res.send(post);
@@ -77,6 +76,7 @@ router.get("/tag/:tag", (req, res, next) => {
   let tag = req.params.tag;
   Post.find({"tag": tag}, '_id user_id location', (err, posts) => {
     if  (posts.length >= 1) {
+      console.log("Found post(s)");
       res.send(posts);
     } else if (err) {
       console.log(err.message);
