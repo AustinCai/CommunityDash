@@ -1,6 +1,10 @@
 import React from 'react';
 
-export class LoginForm extends React.Component {
+import FormControl from 'react-bootstrap/FormControl';
+import FormGroup from 'react-bootstrap/FormGroup';
+import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
+
+class Form extends React.Component {
   
   constructor(props) {
     super(props);
@@ -64,9 +68,64 @@ export class LoginForm extends React.Component {
       </form>
     );
   }
+
 }
 
-export class RegisterForm extends LoginForm {
+export class LoginForm extends Form {
+
+  async handleSubmit(event) {
+    console.log('A name was submitted: ' + this.state.email + ", with password: " + this.state.password);
+    event.preventDefault();
+
+    try {
+      console.log(JSON.stringify(this.state));
+      const res = await fetch(this.props.endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.state)
+      });
+      if (res.ok){
+        const resText = await res.text();
+        this.fetchProfile(JSON.parse(resText).token);
+      } else {
+        console.log(res)
+        throw new Error('Request failed!');
+      }
+    } catch (error){
+      console.log(error);
+    }
+  }
+
+
+  async fetchProfile(token){
+    console.log('A token was submitted: ' + token);
+
+    try {
+      const res = await fetch('http://localhost:9000/user/me', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'token': token, 
+        },
+      });
+      if (res.ok){
+        const resText = await res.text();
+        console.log(resText);
+        this.props.onProfileFetch(JSON.parse(resText));
+        this.props.onAuthenticate(); 
+      } else {
+        console.log(res)
+        throw new Error('Request failed!');
+      }
+    } catch (error){
+      console.log(error);
+    }
+  }
+}
+
+export class RegisterForm extends Form {
   constructor(props){
     super(props);
     this.state = {
