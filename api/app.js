@@ -10,6 +10,8 @@ const InitiateMongoServer = require("./database/config/db");
 const userRouter = require("./routes/user");
 const forumRouter = require("./routes/forum");
 
+const chatRouter = require("./routes/chat");
+
 var indexRouter = require('./routes/index');
 var testAPIRouter = require('./routes/testAPI');
 var buttonRouter = require('./routes/button');
@@ -39,6 +41,7 @@ app.use('/button', buttonRouter);
 app.use('/login', loginRouter);
 app.use("/user", userRouter);
 app.use("/forum", forumRouter);
+app.use("/chat", chatRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
