@@ -5,13 +5,21 @@ import Modal from 'react-bootstrap/Modal';
 
 import Button from "react-bootstrap/Button";
 import From from "react-bootstrap/Form";
+import Image from 'react-bootstrap/Image';
 
 import {DummyButton, TestButton} from "./Buttons";
 import {LoginForm, RegisterForm} from "./Forms";
 import {HomeScreen} from "./HomeScreen";
 
+import GroceryImage from './groceries.jpg';
+
 import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// const backgroundImageStyle = {
+//   backgroundImage: url('./groceries.jpg')
+// }
+
 
 class LoginScreen extends React.Component {
   constructor(props){ 
@@ -24,10 +32,11 @@ class LoginScreen extends React.Component {
   handleShow = () => this.setState({show: true});
   handleClose = () => this.setState({show: false});
 
+
   render(){
     return (
       <div className="App">
-        <header className="App-header">
+        <header className="App-header" /*style={backgroundImageStyle}*/>
             <h1 className="App-title">Welcome to CommunityDash!</h1>
         </header>
         <div className="paddedDiv">
