@@ -4,9 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require("cors");
+var mongoose = require('mongoose');
 
 const InitiateMongoServer = require("./database/config/db");
 const userRouter = require("./routes/user");
+const forumRouter = require("./routes/forum");
 
 var indexRouter = require('./routes/index');
 var testAPIRouter = require('./routes/testAPI');
@@ -14,6 +16,9 @@ var buttonRouter = require('./routes/button');
 var loginRouter = require('./routes/login');
 
 InitiateMongoServer();
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var app = express();
 
@@ -33,6 +38,7 @@ app.use("/testAPI", testAPIRouter);
 app.use('/button', buttonRouter);
 app.use('/login', loginRouter);
 app.use("/user", userRouter);
+app.use("/forum", forumRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
