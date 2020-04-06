@@ -1,36 +1,47 @@
-import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import React, { Component } from 'react';
+import Login from './Login';
+import ChatApp from './ChatApp';
+import '@progress/kendo-theme-material/dist/all.css';
 
 export class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      loggedIn: false
+    };
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+  }
+
+
+  handleLogin(event) {
+    event.preventDefault();
+    this.setState({ loggedIn: true });
+  }
+  handleUsernameChange(event) {
+    this.setState({ username: event.target.value });
+  }
+
   render() {
+    let loginOrChat;
+    if (this.state.loggedIn) {
+      loginOrChat = <ChatApp username={this.state.username}/>;
+    } else {
+      loginOrChat = (
+        <Login
+          handleLogin={this.handleLogin}
+          handleUsernameChange={this.handleUsernameChange}
+          username={this.state.username}
+        />
+      );
+    }
     return (
-
-      <Container>
-        <Row style={{backgroundColor: 'maroon'}}>
-          <Col xs={1}/>
-          <Col style={{backgroundColor: 'white', margin: "10px", marginLeft: '0px'}}>
-            <h1> Forum </h1>
-            <div style={{minHeight: '500px'}}>
-              <img src={require('./forum_img.png')} style={{maxWidth: '100%'}}/>
-            </div>
-          </Col>
-          <Col style={{backgroundColor: 'white', margin: "10px", marginLeft: '0px'}}>
-            <h1> Chat </h1>
-            <div style={{minHeight: '500px'}}>
-              <img src={require('./chat_img.png')} style={{maxWidth: '100%'}}/>
-            </div>
-          </Col>
-          <Col xs={1}/>
-        </Row>
-
-        <Row style={{alignItems: 'center', justifyContent: 'center'}}>
-          <h2>User Info:</h2>
-          <p>{JSON.stringify(this.props.profileInfo)}</p>
-        </Row>
-      </Container>
-
+      <div className="container">
+        <div className="row mt-3 justify-content-center">{loginOrChat}</div>
+      </div>
     );
   }
 }
+
+export default HomeScreen;
