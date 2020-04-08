@@ -32,7 +32,6 @@ class LoginScreen extends React.Component {
   handleShow = () => this.setState({show: true});
   handleClose = () => this.setState({show: false});
 
-
   render(){
     return (
       <div className="App">
@@ -57,7 +56,6 @@ class LoginScreen extends React.Component {
       </div>
     );
   }
-
 }
 
 class App extends React.Component {
@@ -77,7 +75,6 @@ class App extends React.Component {
 
   handleProfileFetch(info){
     this.setState({profileInfo: info});
-    console.log(this.state.profileInfo);
   }
 
     render() {
