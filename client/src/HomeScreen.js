@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Login from './Login';
 import ChatApp from './ChatApp';
 import '@progress/kendo-theme-material/dist/all.css';
 
