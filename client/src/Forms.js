@@ -1,10 +1,13 @@
 import React from 'react';
 
-import FormControl from 'react-bootstrap/FormControl';
-import FormGroup from 'react-bootstrap/FormGroup';
 import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
 
-class Form extends React.Component {
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+class FormWrapper extends React.Component {
   
   constructor(props) {
     super(props);
@@ -51,27 +54,36 @@ class Form extends React.Component {
     }
   }
 
+
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Email:
-          <input type="text" value={this.state.email} onChange={this.handleEmailChange}/>
-        </label>
-        <br/>
-        <label>
-          Password:
-          <input type="text" value={this.state.password} onChange={this.handlePasswordChange}/>
-        </label>
-        <br/>
-        <input type="submit" value="Login"/>
-      </form>
+      <Row>
+        <Col md={{ span: 4, offset: 4 }} lg={{ span: 2, offset: 5 }}>
+          <Form>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" value={this.state.email} onChange={this.handleEmailChange} />
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Password" value={this.state.password} onChange={this.handlePasswordChange}/>
+            </Form.Group>
+
+            <Button variant="primary" type="submit" onClick={this.handleSubmit}>
+              Login
+            </Button>
+          </Form>
+        </Col>
+      </Row>
     );
   }
-
 }
 
-export class LoginForm extends Form {
+export class LoginForm extends FormWrapper {
 
   async handleSubmit(event) {
     console.log('A name was submitted: ' + this.state.email + ", with password: " + this.state.password);
@@ -125,7 +137,7 @@ export class LoginForm extends Form {
   }
 }
 
-export class RegisterForm extends Form {
+export class RegisterForm extends FormWrapper {
   constructor(props){
     super(props);
     this.state = {
@@ -154,39 +166,41 @@ export class RegisterForm extends Form {
   }
 
   render() {
+
+  }
+
+  render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          First Name:
-          <input type="text" onChange={this.handleFirstNameChange}/>
-        </label>
-        <br/>
-        <label>
-          Last Name:
-          <input type="text" onChange={this.handleLastNameChange}/>
-        </label>
-        <br/>
-        <label>
-          Email:
-          <input type="text" value={this.state.email} onChange={this.handleEmailChange}/>
-        </label>
-        <br/>
-        <label>
-          Password:
-          <input type="text" value={this.state.password} onChange={this.handlePasswordChange}/>
-        </label>
-        <br/>
-        <label>
-          Confirm Password:
-          <input type="text"/>
-        </label>
-        <label>
-          ZIP Code:
-          <input type="text" onChange={this.handleZipCodeChange}/>
-        </label>
-        <br/>
-        <input type="submit" value="Register"/>
-      </form>
+      <Form>
+        <Form.Group>
+          <Form.Label>First Name</Form.Label>
+          <Form.Control value={this.state.firstName} onChange={this.handleFirstNameChange} />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Last Name</Form.Label>
+          <Form.Control value={this.state.lastName} onChange={this.handleLastNameChange} />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Email</Form.Label>
+          <Form.Control type="email" value={this.state.email} onChange={this.handleEmailChange} />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Password</Form.Label>
+          <Form.Control type="password" value={this.state.password} onChange={this.handlePasswordChange} />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>ZIP Code</Form.Label>
+          <Form.Control value={this.state.zipcode} onChange={this.handleZipCodeChange} />
+        </Form.Group>
+
+        <Button variant="primary" type="submit" onClick={this.handleSubmit}>
+          Register
+        </Button>
+      </Form>
     );
   }
 }

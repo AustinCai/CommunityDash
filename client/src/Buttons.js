@@ -1,12 +1,13 @@
 import React from "react";
+import Button from 'react-bootstrap/Button';
 
-export class Button extends React.Component {
+export class ButtonWrapper extends React.Component {
   render() {
-    return <button onClick={() => this.handleClick()}>{this.props.ButtonText}</button> 
+    return <Button onClick={() => this.handleClick()}>{this.props.ButtonText}</Button> 
   }
 }
 
-export class TestButton extends Button {
+export class TestButton extends ButtonWrapper {
   async handleClick() {
     try {
       const res = await fetch('http://localhost:9000/button');
@@ -22,10 +23,10 @@ export class TestButton extends Button {
   }
 }
 
-export class DummyButton extends Button {
+export class DummyButton extends ButtonWrapper {
   handleClick() {
     console.log("click!");
   }
 }
 
-Button.defaultProps = {ButtonText: 'Untitled Button'};
+ButtonWrapper.defaultProps = {ButtonText: 'Untitled Button'};
