@@ -19,3 +19,4 @@ npm start
 * https://www.w3schools.com/nodejs/nodejs_mongodb.asp
 * https://www.twilio.com/blog/chat-app-twilio-kendoreact
 * https://www.twilio.com/docs/chat/tutorials/chat-application-node-express
+* https://dev.to/devteam/announcing-the-twilio-hackathon-on-dev-2lh8
