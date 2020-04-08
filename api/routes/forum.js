@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { ObjectId } = require("mongodb"); 
 const { check } = require("express-validator");
+const async = require('async');
 
 const Post = require("../database/postModel/Post");
 const User = require("../database/model/User");
@@ -133,5 +134,56 @@ router.get("/post/user/:id", (req, res, next) => {
   });
 })
 
+router.get("/zipcode/:zipcode", (req, res, next) => {
+  let zipcode = req.params && req.params.zipcode;
+  zipcode = parseInt(zipcode, 10);
+
+  if (!zipcode || isNaN(zipcode)) {
+    res.status(404).send(`Zipcode cannot be found.`);
+  }
+
+  let results = {
+    originalPosts: [],
+    formattedPosts: []
+  };
+  
+  async.series([
+    function(callback) {
+      Post.find({"zipcode": zipcode}, (err, posts) => {
+        if (err) callback(err.message); 
+        else {
+          results.originalPosts = posts;
+          callback();
+        }
+      });
+    },
+    function(callback) {
+      async.forEach(results.originalPosts, function(post, callback) {
+        User.findOne({"_id": post.user_id}, function(err, user) {
+          if (err) return callback(err);
+          let newPost = {
+            "firstName": user.firstName,
+            "lastName": user.lastName,
+            "subject": post.subject,
+            "message": post.message,
+            "email": post.email,
+            "tag": post.tag,
+            "zipcode": post.zipcode,
+          };
+          console.log(newPost);
+          results.formattedPosts.push(newPost);
+          callback();
+        });
+      }, function (err) {
+        if (err) return callback(err);
+                    callback();
+      });
+    }
+  ], function(err) {
+    if (err) return next(err);
+    console.log(results.formattedPosts);
+    res.send(results.formattedPosts);
+  });
+});
 
 module.exports = router;
