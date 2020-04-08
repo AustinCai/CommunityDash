@@ -134,14 +134,99 @@ router.get("/post/user/:id", (req, res, next) => {
   });
 })
 
-router.get("/zipcode/:zipcode", (req, res, next) => {
-  let zipcode = req.params && req.params.zipcode;
-  zipcode = parseInt(zipcode, 10);
+router.use("/zipcode/test/ing/", (req, res, next) => {
+  const zipcodes = [ 91789, 95126 ];
 
+  // let posts = await Post.find().where('zipcode').in(zipcodes).exec();
+  // console.log(posts);
+  console.log("Sending request");
+
+  Post.find({
+    'zipcode': { $in: zipcodes}
+  }, function(err, docs){
+    if (err) {
+      res.status(500).send(err.message);
+      next(err);
+    } else {
+      console.log(docs);
+      req.posts = docs;
+      next();
+    }
+  });
+  // res.send(posts);
+})
+
+router.use("/zipcode/test/ing/", (req, res, next) => {
+  console.log("Testing out middle ware :)");
+  next();
+})
+
+router.get("/zipcode/test/ing/", (req, res, next) => {
+  if (req.posts) {
+    console.log("It worked!");
+
+    let results = {
+      originalPosts: req.posts,
+      formattedPosts: []
+    };
+    
+    async.series([
+      // function(callback) {
+      //   Post.find({"zipcode": req.zipcode}, (err, posts) => {
+      //     if (err) callback(err.message); 
+      //     else {
+      //       results.originalPosts = posts;
+      //       callback();
+      //     }
+      //   });
+      // },
+      function(callback) {
+        async.forEach(results.originalPosts, function(post, callback) {
+          User.findOne({"_id": post.user_id}, function(err, user) {
+            if (err) return callback(err);
+            let newPost = {
+              "firstName": user.firstName,
+              "lastName": user.lastName,
+              "subject": post.subject,
+              "message": post.message,
+              "email": post.email,
+              "tag": post.tag,
+              "zipcode": post.zipcode,
+            };
+            // console.log(newPost);
+            results.formattedPosts.push(newPost);
+            callback();
+          });
+        }, function (err) {
+          if (err) return callback(err);
+                      callback();
+        });
+      }
+    ], function(err) {
+      if (err) return next(err);
+      console.log(results.formattedPosts);
+      res.send(results.formattedPosts);
+    });
+
+  } else {
+    console.log("Did not work :((");
+    res.send(400).status("Did not work");
+  }
+})
+
+router.use("/zipcode/:zipcode", (req, res, next) => {
+  let zipcode = req.params && req.params.zipcode;
   if (!zipcode || isNaN(zipcode)) {
     res.status(404).send(`Zipcode cannot be found.`);
   }
+  req.zipcode = zipcode;
 
+  console.log(`Requesting for zipcode ${req.zipcode}`);
+
+  next();
+})
+
+router.get("/zipcode/:zipcode", (req, res, next) => {
   let results = {
     originalPosts: [],
     formattedPosts: []
@@ -149,7 +234,7 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
   
   async.series([
     function(callback) {
-      Post.find({"zipcode": zipcode}, (err, posts) => {
+      Post.find({"zipcode": req.zipcode}, (err, posts) => {
         if (err) callback(err.message); 
         else {
           results.originalPosts = posts;
@@ -170,7 +255,7 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
             "tag": post.tag,
             "zipcode": post.zipcode,
           };
-          console.log(newPost);
+          // console.log(newPost);
           results.formattedPosts.push(newPost);
           callback();
         });
