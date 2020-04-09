@@ -169,9 +169,10 @@ export class PostForm extends FormWrapper {
 
     //WHAT DOES THE BACKEND WANT IN THE BODY FOR A NEW POST?
     this.state = {
-      email: this.props.profileInfo.email,
+      user_id: this.props.profileInfo.user_id,
       subject: '',
       message: '',
+      email: this.props.profileInfo.email,
       tag: '',
       zipcode: this.props.profileInfo.zipcode,
     };
