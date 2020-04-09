@@ -43,7 +43,7 @@ class FormWrapper extends React.Component {
       if (res.ok){
         const resText = await res.text();
         console.log("resText: " + resText);
-        this.fetchProfile(JSON.parse(resText).token);
+        this.afterFetch(JSON.parse(resText).token);
         if (this.props.onClose){
           this.props.onClose();
         }
@@ -56,8 +56,8 @@ class FormWrapper extends React.Component {
     }
   }
 
-  async fetchProfile(token) {
-    console.log("fetchProfile() ignored");
+  async afterFetch(token) {
+    console.log("afterFetch() ignored");
   }
 
   render() {
@@ -91,7 +91,7 @@ class FormWrapper extends React.Component {
 // handles submit, then fetches profile
 export class LoginForm extends FormWrapper {
 
-  async fetchProfile(token){
+  async afterFetch(token){
     try {
       const res = await fetch('http://localhost:9000/user/me', {
         method: 'GET',
@@ -176,6 +176,11 @@ export class PostForm extends FormWrapper {
       tag: '',
       zipcode: this.props.profileInfo.zipcode,
     };
+  }
+
+  async afterFetch(token) {
+    console.log("GET FORUM POSTS");
+    this.props.getForumPosts();
   }
 
   render() {

@@ -4,7 +4,6 @@ import { Chat as ChatUI } from '@progress/kendo-react-conversational-ui';
 
 class ChatApp extends Component {
   constructor(props) {
-    console.log("constructor");
     super(props);
     this.state = {
       error: null,
@@ -26,7 +25,6 @@ class ChatApp extends Component {
   }
 
   componentDidMount() {
-    console.log("component mount");
     fetch('/chat/token', {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       method: 'POST',
