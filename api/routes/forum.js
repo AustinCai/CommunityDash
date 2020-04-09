@@ -161,21 +161,27 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
     },
     function(callback) {
       async.forEach(results.originalPosts, function(post, callback) {
+        let newPost = {
+          
+          "subject": post.subject,
+          "message": post.message,
+          "email": post.email,
+          "tag": post.tag,
+          "zipcode": post.zipcode,
+        };
         User.findOne({"_id": post.user_id}, function(err, user) {
           if (err) return callback(err);
-          let newPost = {
-            "firstName": user.firstName,
-            "lastName": user.lastName,
-            "subject": post.subject,
-            "message": post.message,
-            "email": post.email,
-            "tag": post.tag,
-            "zipcode": post.zipcode,
-          };
+          newPost["firstName"] = "";
+          newPost["lastName"] = "";
+          if (user) {
+            newPost["firstName"] = user.firstName;
+            newPost["lastName"] = user.lastName;
+          }
           console.log(newPost);
-          results.formattedPosts.push(newPost);
+          
           callback();
         });
+        results.formattedPosts.push(newPost);
       }, function (err) {
         if (err) return callback(err);
                     callback();
