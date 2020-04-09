@@ -17,9 +17,10 @@ export class Forum extends React.Component {
     for (let i = 0; i < this.props.forumPosts.length; i++){
       forumPostsDisplay.push(
         <ListGroup.Item key={i}>
-          <h5>{this.props.forumPosts[i].subject}</h5>
+          <h5><b>{this.props.forumPosts[i].subject}</b></h5>
         <br/>
           <p>{this.props.forumPosts[i].message}</p>
+          <p><i>{this.props.forumPosts[i].email}</i></p>
         </ListGroup.Item>
       );
     }
@@ -28,7 +29,7 @@ export class Forum extends React.Component {
 
   render() {
     return (
-      <div style={{maxHeight: 'calc(100vh - 60px)', overflowY: 'auto'}}>
+      <div style={{maxHeight: '530px', overflowY: 'auto'}}>
         <ListGroup>
           {this.buildForumJSX()}
         </ListGroup>
