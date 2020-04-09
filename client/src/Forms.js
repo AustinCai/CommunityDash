@@ -1,7 +1,5 @@
 import React from 'react';
 
-import {BrowserRouter as Router, Link, Route, Redirect} from 'react-router-dom';
-
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -27,9 +25,6 @@ class FormWrapper extends React.Component {
   }
 
   async handleSubmit(event) {
-    console.log("handleSubmit()");
-    console.log(this.state);
-    console.log(this.props.endpoint);
     event.preventDefault();
 
     try {
@@ -42,12 +37,10 @@ class FormWrapper extends React.Component {
       });
       if (res.ok){
         const resText = await res.text();
-        console.log("resText: " + resText);
         this.afterFetch(JSON.parse(resText).token);
         if (this.props.onClose){
           this.props.onClose();
         }
-        console.log("handleSubmit() SUCCESS");
       } else {
         throw new Error('Request failed!');
       }
@@ -57,7 +50,6 @@ class FormWrapper extends React.Component {
   }
 
   async afterFetch(token) {
-    console.log("afterFetch() ignored");
   }
 
   render() {
@@ -102,11 +94,9 @@ export class LoginForm extends FormWrapper {
       });
       if (res.ok){
         const resText = await res.text();
-        console.log(resText);
         this.props.onProfileFetch(JSON.parse(resText));
         this.props.onAuthenticate(); 
       } else {
-        console.log(res)
         throw new Error('Request failed!');
       }
     } catch (error){

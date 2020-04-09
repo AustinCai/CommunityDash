@@ -1,17 +1,7 @@
 import React from "react";
-import Popup from "reactjs-popup";
-import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
-import Modal from 'react-bootstrap/Modal';
 
-import Button from "react-bootstrap/Button";
-import From from "react-bootstrap/Form";
-import Image from 'react-bootstrap/Image';
-
-import {DummyButton, TestButton} from "./Buttons";
 import {HomeScreen} from "./HomeScreen";
 import {LoginScreen} from "./LoginScreen";
-
-import GroceryImage from './groceries.jpg';
 
 import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';

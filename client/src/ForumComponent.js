@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button';
 import ListGroup from "react-bootstrap/ListGroup";
@@ -11,25 +9,26 @@ import {PostForm} from './Forms';
 export class Forum extends React.Component {
   
   buildForumJSX(){
-    let forumPostsDisplay = null
-    if (this.props.forumPosts) {
-      let forumPosts = this.props.forumPosts;
-      forumPostsDisplay = forumPosts.map((post) =>
-          <ListGroup>
-            <ListGroup.Item>
-              <h5>{post.subject}</h5>
-            <br/>
-              <p>{post.message}</p>
-            </ListGroup.Item>
-          </ListGroup>
-        );
-    } 
+    if (!this.props.forumPosts){
+      return null;
+    }
+
+    const forumPostsDisplay = [];
+    for (let i = 0; i < this.props.forumPosts.length; i++){
+      forumPostsDisplay.push(
+        <ListGroup.Item key={i}>
+          <h5>{this.props.forumPosts[i].subject}</h5>
+        <br/>
+          <p>{this.props.forumPosts[i].message}</p>
+        </ListGroup.Item>
+      );
+    }
     return forumPostsDisplay;
   }
 
   render() {
     return (
-      <div style={{'max-height': 'calc(100vh - 60px)', 'overflow-y': 'auto'}}>
+      <div style={{maxHeight: 'calc(100vh - 60px)', overflowY: 'auto'}}>
         <ListGroup>
           {this.buildForumJSX()}
         </ListGroup>
@@ -53,18 +52,16 @@ export class ForumComponent extends React.Component {
   handleShow = () => this.setState({show: true});
   handleClose = () => this.setState({show: false});
 
-  componentWillMount(){
+  componentDidMount(){
     this.getForumPosts();
   }
 
   async getForumPosts() {
-    console.log("GET FORUM POSTS");
     try {
       const res = await fetch("http://localhost:9000/forum/zipcode/" + this.props.profileInfo.zipcode);
       if (res.ok){
         const resText = await res.text();
         this.setState({forumPosts: JSON.parse(resText)})
-        console.log(this.state.forumPosts);
       } else {
         throw new Error('Request failed!');
       }
