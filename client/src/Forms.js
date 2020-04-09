@@ -16,25 +16,23 @@ class FormWrapper extends React.Component {
       password: '',
     };
 
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleEmailChange(event) {
-    this.setState({email: event.target.value});
-  }
-
-  handlePasswordChange(event) {
-    this.setState({password: event.target.value});
+  handleInputChange(event) {
+    const newState = {};
+    newState[event.target.name] = event.target.value;
+    this.setState(newState);
   }
 
   async handleSubmit(event) {
-    console.log('A name was submitted: ' + this.state.email + ", with password: " + this.state.password);
+    console.log("handleSubmit()");
+    console.log(this.state);
+    console.log(this.props.endpoint);
     event.preventDefault();
 
     try {
-      console.log(JSON.stringify(this.state));
       const res = await fetch(this.props.endpoint, {
         method: 'POST',
         headers: {
@@ -44,9 +42,13 @@ class FormWrapper extends React.Component {
       });
       if (res.ok){
         const resText = await res.text();
-        console.log(resText)
+        console.log("resText: " + resText);
+        this.fetchProfile(JSON.parse(resText).token);
+        if (this.props.onClose){
+          this.props.onClose();
+        }
+        console.log("handleSubmit() SUCCESS");
       } else {
-        console.log(res)
         throw new Error('Request failed!');
       }
     } catch (error){
@@ -54,6 +56,9 @@ class FormWrapper extends React.Component {
     }
   }
 
+  async fetchProfile(token) {
+    console.log("fetchProfile() ignored");
+  }
 
   render() {
     return (
@@ -62,7 +67,7 @@ class FormWrapper extends React.Component {
           <Form>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" value={this.state.email} onChange={this.handleEmailChange} />
+              <Form.Control type="email" placeholder="Enter email" name="email" value={this.state.email} onChange={this.handleInputChange} />
               <Form.Text className="text-muted">
                 We'll never share your email with anyone else.
               </Form.Text>
@@ -70,7 +75,7 @@ class FormWrapper extends React.Component {
 
             <Form.Group controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" value={this.state.password} onChange={this.handlePasswordChange}/>
+              <Form.Control type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.handleInputChange}/>
             </Form.Group>
 
             <Button variant="primary" type="submit" onClick={this.handleSubmit}>
@@ -83,37 +88,10 @@ class FormWrapper extends React.Component {
   }
 }
 
+// handles submit, then fetches profile
 export class LoginForm extends FormWrapper {
 
-  async handleSubmit(event) {
-    console.log('A name was submitted: ' + this.state.email + ", with password: " + this.state.password);
-    event.preventDefault();
-
-    try {
-      console.log(JSON.stringify(this.state));
-      const res = await fetch(this.props.endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(this.state)
-      });
-      if (res.ok){
-        const resText = await res.text();
-        this.fetchProfile(JSON.parse(resText).token);
-      } else {
-        console.log(res)
-        throw new Error('Request failed!');
-      }
-    } catch (error){
-      console.log(error);
-    }
-  }
-
-
   async fetchProfile(token){
-    console.log('A token was submitted: ' + token);
-
     try {
       const res = await fetch('http://localhost:9000/user/me', {
         method: 'GET',
@@ -147,26 +125,6 @@ export class RegisterForm extends FormWrapper {
       lastName: '',
       zipcode: '',
     };
-
-    this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
-    this.handleLastNameChange = this.handleLastNameChange.bind(this);
-    this.handleZipCodeChange = this.handleZipCodeChange.bind(this);
-  }
-
-  handleFirstNameChange(event) {
-    this.setState({firstName: event.target.value});
-  }
-
-  handleLastNameChange(event) {
-    this.setState({lastName: event.target.value});
-  }
-
-  handleZipCodeChange(event) {
-    this.setState({zipcode: event.target.value});
-  }
-
-  render() {
-
   }
 
   render() {
@@ -174,31 +132,71 @@ export class RegisterForm extends FormWrapper {
       <Form>
         <Form.Group>
           <Form.Label>First Name</Form.Label>
-          <Form.Control value={this.state.firstName} onChange={this.handleFirstNameChange} />
+          <Form.Control name="firstName" value={this.state.firstName} onChange={this.handleInputChange} />
         </Form.Group>
 
         <Form.Group>
           <Form.Label>Last Name</Form.Label>
-          <Form.Control value={this.state.lastName} onChange={this.handleLastNameChange} />
+          <Form.Control name="lastName" value={this.state.lastName} onChange={this.handleInputChange} />
         </Form.Group>
 
         <Form.Group>
           <Form.Label>Email</Form.Label>
-          <Form.Control type="email" value={this.state.email} onChange={this.handleEmailChange} />
+          <Form.Control type="email" name="email" value={this.state.email} onChange={this.handleInputChange} />
         </Form.Group>
 
         <Form.Group>
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" value={this.state.password} onChange={this.handlePasswordChange} />
+          <Form.Control type="password" name="password" value={this.state.password} onChange={this.handleInputChange} />
         </Form.Group>
 
         <Form.Group>
           <Form.Label>ZIP Code</Form.Label>
-          <Form.Control value={this.state.zipcode} onChange={this.handleZipCodeChange} />
+          <Form.Control name="zipcode" value={this.state.zipcode} onChange={this.handleInputChange} />
         </Form.Group>
 
         <Button variant="primary" type="submit" onClick={this.handleSubmit}>
           Register
+        </Button>
+      </Form>
+    );
+  }
+}
+
+export class PostForm extends FormWrapper {
+  constructor(props){
+    super(props);
+
+    //WHAT DOES THE BACKEND WANT IN THE BODY FOR A NEW POST?
+    this.state = {
+      email: this.props.profileInfo.email,
+      subject: '',
+      message: '',
+      tag: '',
+      zipcode: this.props.profileInfo.zipcode,
+    };
+  }
+
+  render() {
+    return (
+      <Form>
+        <Form.Group>
+          <Form.Label>Subject</Form.Label>
+          <Form.Control type="text" name="subject" value={this.state.subject} onChange={this.handleInputChange} />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Message</Form.Label>
+          <Form.Control type="text" name="message" value={this.state.message} onChange={this.handleInputChange} />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Tag</Form.Label>
+          <Form.Control type="text" name="tag" value={this.state.tag} onChange={this.handleInputChange} />
+        </Form.Group>
+
+        <Button variant="primary" type="submit" onClick={this.handleSubmit}>
+          Post
         </Button>
       </Form>
     );

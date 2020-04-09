@@ -30,6 +30,8 @@ router.post("/post",
       check("location", "Please enter a valid zipcode").not().isEmpty(),
   ],
   (req, res, next) => {
+    console.log("router(): forum/post");
+    console.log(req.body);
     const {
       user_id,
       subject,
