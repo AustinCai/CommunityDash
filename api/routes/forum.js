@@ -145,7 +145,9 @@ router.use("/zipcode/:zipcode", (req, res, next) => {
     res.status(404).send(`Zipcode cannot be found.`);
   }
   req.zipcodes = [zipcode];
-  req.radius = 10;
+  let radius = req.body.radius || "10";
+  req.radius = parseInt(radius, 10);
+
   next();
 })
 
@@ -157,6 +159,33 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
   
   async.series([
     function(callback) {
+      let Url = 'https://www.zipcodeapi.com/rest/';
+      Url = Url.concat('hudLhTYm7lV8J75D2Iqlr3RNhMhkXX0gr8GJ21PwQKbJCrc4uwXekvVip9p8lKet/');
+      Url = Url.concat(`radius.json/${req.zipcodes[0]}/${req.radius}/mile`);
+      console.log(Url);
+      const getZipcodes = async url => {
+        try{
+          let listZipcodes = await fetch(url);
+          const json = await listZipcodes.json();
+          listZipcodes = json.zip_codes;
+          listZipcodes.forEach(geo => {
+            if (geo && geo.zip_code) {
+              const city = parseInt(geo["zip_code"],10);
+              if (!isNaN(city)) {
+                req.zipcodes.push(city);
+              }
+            }
+          });
+          callback();
+        } catch (err) {
+          console.log("Invalid zipcode or radius");
+          callback(err.message);
+        }
+      }
+      getZipcodes(Url); 
+    },
+    function(callback) {
+      console.log(req.zipcodes);
       Post.find({"zipcode": {$in: req.zipcodes}}, (err, posts) => {
         if (err) callback(err.message); 
         else {
@@ -183,7 +212,6 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
             newPost["firstName"] = user.firstName;
             newPost["lastName"] = user.lastName;
           }
-          // console.log(newPost);
           console.log("\tFound a post");
           callback();
         });
@@ -195,7 +223,6 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
     }
   ], function(err) {
     if (err) return next(err);
-    // console.log(results.formattedPosts);
     console.log(`Total: found ${results.formattedPosts.length} posts`);
     res.send(results.formattedPosts);
   });
