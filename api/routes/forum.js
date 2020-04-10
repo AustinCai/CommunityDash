@@ -3,6 +3,7 @@ const router = express.Router();
 const { ObjectId } = require("mongodb"); 
 const { check } = require("express-validator");
 const async = require('async');
+const fetch = require('node-fetch');
 
 const Post = require("../database/postModel/Post");
 const User = require("../database/model/User");
@@ -136,14 +137,21 @@ router.get("/post/user/:id", (req, res, next) => {
   });
 })
 
-router.get("/zipcode/:zipcode", (req, res, next) => {
+router.use("/zipcode/:zipcode", (req, res, next) => {
   let zipcode = req.params && req.params.zipcode;
   zipcode = parseInt(zipcode, 10);
 
   if (!zipcode || isNaN(zipcode)) {
     res.status(404).send(`Zipcode cannot be found.`);
   }
+  req.zipcodes = [zipcode];
+  let radius = req.body.radius || "10";
+  req.radius = parseInt(radius, 10);
 
+  next();
+})
+
+router.get("/zipcode/:zipcode", (req, res, next) => {
   let results = {
     originalPosts: [],
     formattedPosts: []
@@ -151,7 +159,34 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
   
   async.series([
     function(callback) {
-      Post.find({"zipcode": zipcode}, (err, posts) => {
+      let Url = 'https://www.zipcodeapi.com/rest/';
+      Url = Url.concat('hudLhTYm7lV8J75D2Iqlr3RNhMhkXX0gr8GJ21PwQKbJCrc4uwXekvVip9p8lKet/');
+      Url = Url.concat(`radius.json/${req.zipcodes[0]}/${req.radius}/mile`);
+      console.log(Url);
+      const getZipcodes = async url => {
+        try{
+          let listZipcodes = await fetch(url);
+          const json = await listZipcodes.json();
+          listZipcodes = json.zip_codes;
+          listZipcodes.forEach(geo => {
+            if (geo && geo.zip_code) {
+              const city = parseInt(geo["zip_code"],10);
+              if (!isNaN(city)) {
+                req.zipcodes.push(city);
+              }
+            }
+          });
+          callback();
+        } catch (err) {
+          console.log("Invalid zipcode or radius");
+          callback(err.message);
+        }
+      }
+      getZipcodes(Url); 
+    },
+    function(callback) {
+      console.log(req.zipcodes);
+      Post.find({"zipcode": {$in: req.zipcodes}}, (err, posts) => {
         if (err) callback(err.message); 
         else {
           results.originalPosts = posts;
@@ -177,8 +212,7 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
             newPost["firstName"] = user.firstName;
             newPost["lastName"] = user.lastName;
           }
-          console.log(newPost);
-          
+          console.log("\tFound a post");
           callback();
         });
         results.formattedPosts.push(newPost);
@@ -189,7 +223,7 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
     }
   ], function(err) {
     if (err) return next(err);
-    console.log(results.formattedPosts);
+    console.log(`Total: found ${results.formattedPosts.length} posts`);
     res.send(results.formattedPosts);
   });
 });
