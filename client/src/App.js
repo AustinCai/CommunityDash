@@ -4,7 +4,7 @@ import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 
 import Button from "react-bootstrap/Button";
-import From from "react-bootstrap/Form";
+import Form from "react-bootstrap/Form";
 import Image from 'react-bootstrap/Image';
 
 import {DummyButton, TestButton} from "./Buttons";
@@ -22,7 +22,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 class LoginScreen extends React.Component {
-  constructor(props){ 
+  constructor(props){
     super(props);
     this.state = {
       show: false,
