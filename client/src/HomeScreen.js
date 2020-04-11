@@ -6,6 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import {ForumComponent} from './ForumComponent';
+import {SearchComponent} from './Search';
 
 //PROPS: profileInfo
 export class HomeScreen extends React.Component {
@@ -14,6 +15,7 @@ export class HomeScreen extends React.Component {
     return (
       <Row>
         <Col md={6}>
+          <SearchComponent/>
           <ForumComponent profileInfo={this.props.profileInfo}/>
         </Col>
 

@@ -7,7 +7,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import {PostForm} from './Forms';
 
 export class Forum extends React.Component {
-  
+
   buildForumJSX(){
     if (!this.props.forumPosts){
       return null;
@@ -73,6 +73,7 @@ export class ForumComponent extends React.Component {
 
   render() {
     return (
+      
         <div>
           <div className="row mt-3 justify-content-center"><h1>Forum</h1></div>
           <div className="row mt-3 justify-content-center"><Forum profileInfo={this.props.profileInfo} forumPosts={this.state.forumPosts}/></div>
