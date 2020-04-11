@@ -26,7 +26,7 @@ Forum and Posts
 
 Zipcode/Location
 * https://www.zipcodeapi.com/API
-* https://www.freecodecamp.org/news/here-is-the-most-popular-ways-to-make-an-http-request-in-javascript-954ce8c95aaa/
+* https://hackersandslackers.com/making-api-requests-with-nodejs/
 
 Chatroom
 * https://www.twilio.com/blog/chat-app-twilio-kendoreact
@@ -35,3 +35,6 @@ Chatroom
 
 Radar.io
 * https://radar.io/
+
+Search
+* https://www.algolia.com/doc/guides/building-search-ui/going-further/backend-search/in-depth/backend-instantsearch/react/

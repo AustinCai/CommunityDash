@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { ObjectId } = require("mongodb"); 
-const { check } = require("express-validator");
+const { check, validationResult } = require("express-validator");
 const async = require('async');
+const fetch = require('node-fetch');
 
 const Post = require("../database/postModel/Post");
 const User = require("../database/model/User");
@@ -24,12 +25,21 @@ router.get("/", (req, res, next) => {
 // UserId and tag should be supplied by front end
 router.post("/post", 
   [
-      check("email", "Please enter a valid email").isEmail(),
+      check("user_id", "Please enter a valid user id").not().isEmpty(),
       check("subject", "Please enter a valid subject").not().isEmpty(),
       check("message", "Please enter a valid message").not().isEmpty(),
-      check("location", "Please enter a valid zipcode").not().isEmpty(),
+      check("email", "Please enter a valid email").isEmail(),
+      check("tag", "Please enter a valid tag").not().isEmpty(),
+      check("zipcode", "Please enter a valid zipcode").not().isEmpty()
   ],
   (req, res, next) => {
+    const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: errors.array()
+            });
+        }
+    
     console.log("router(): forum/post");
     console.log(req.body);
     const {
@@ -136,14 +146,26 @@ router.get("/post/user/:id", (req, res, next) => {
   });
 })
 
-router.get("/zipcode/:zipcode", (req, res, next) => {
+router.use("/zipcode/:zipcode/:radius", (req, res, next) => {
   let zipcode = req.params && req.params.zipcode;
-  zipcode = parseInt(zipcode, 10);
+  let radius = req.params && req.params.radius;
 
   if (!zipcode || isNaN(zipcode)) {
     res.status(404).send(`Zipcode cannot be found.`);
+  } else {
+    zipcode = parseInt(zipcode, 10);
+    req.zipcodes = [zipcode];
   }
+  if (!radius || isNaN(radius)) {
+    req.radius = 10;
+  } else {
+    radius = parseInt(radius, 10);
+    req.radius = radius
+  }
+  next();
+})
 
+router.get("/zipcode/:zipcode/:radius", (req, res, next) => {
   let results = {
     originalPosts: [],
     formattedPosts: []
@@ -151,7 +173,34 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
   
   async.series([
     function(callback) {
-      Post.find({"zipcode": zipcode}, (err, posts) => {
+      let Url = 'https://www.zipcodeapi.com/rest/';
+      Url = Url.concat('3EYf76hubYPKXxoh5LYKZz3JARC6HclG7YbEsmzzvJOFUFQ3p4b9C05pDyyBopoX');
+      Url = Url.concat(`/radius.json/${req.zipcodes[0]}/${req.radius}/mile`);
+      console.log(Url);
+      const getZipcodes = async url => {
+        try{
+          let listZipcodes = await fetch(url);
+          const json = await listZipcodes.json();
+          listZipcodes = json.zip_codes;
+          listZipcodes.forEach(geo => {
+            if (geo && geo.zip_code) {
+              const city = parseInt(geo["zip_code"],10);
+              if (!isNaN(city)) {
+                req.zipcodes.push(city);
+              }
+            }
+          });
+          callback();
+        } catch (err) {
+          console.log("Invalid zipcode or radius");
+          callback(err.message);
+        }
+      }
+      getZipcodes(Url); 
+    },
+    function(callback) {
+      console.log(req.zipcodes);
+      Post.find({"zipcode": {$in: req.zipcodes}}, (err, posts) => {
         if (err) callback(err.message); 
         else {
           results.originalPosts = posts;
@@ -177,8 +226,7 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
             newPost["firstName"] = user.firstName;
             newPost["lastName"] = user.lastName;
           }
-          console.log(newPost);
-          
+          console.log("\tFound a post");
           callback();
         });
         results.formattedPosts.push(newPost);
@@ -189,7 +237,7 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
     }
   ], function(err) {
     if (err) return next(err);
-    console.log(results.formattedPosts);
+    console.log(`Total: found ${results.formattedPosts.length} posts`);
     res.send(results.formattedPosts);
   });
 });
