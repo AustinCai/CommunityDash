@@ -35,3 +35,6 @@ Chatroom
 
 Radar.io
 * https://radar.io/
+
+Search
+* https://www.algolia.com/doc/guides/building-search-ui/going-further/backend-search/in-depth/backend-instantsearch/react/
