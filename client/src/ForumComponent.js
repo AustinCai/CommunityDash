@@ -10,10 +10,6 @@ import ListGroup from "react-bootstrap/ListGroup";
 
 import {PostForm} from './Forms';
 
-//TODO TODO
-//MAKE A TAG FOR ALL, DEFAULT TAG SELECTION
-
-
 export class Forum extends React.Component {
   constructor(props) {
     super(props);
@@ -75,7 +71,7 @@ export class Forum extends React.Component {
           onSelect={(k) => this.setState({key: k})}
           activeKey={this.state.key}
         >
-          <Tab eventKey="All" title="All">f
+          <Tab eventKey="All" title="All">
             <ListGroup>
               {this.buildForumJSX()}
             </ListGroup>
@@ -110,7 +106,7 @@ export class ForumComponent extends React.Component {
   }
 
   async getForumPosts(event) {
-    const radius = ""
+    const radius = event ? event.label : "0";
 
     try {
       const res = await fetch("http://localhost:9000/forum/zipcode/" + this.props.profileInfo.zipcode + "/" + radius);

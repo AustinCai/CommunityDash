@@ -165,10 +165,6 @@ export class RegisterForm extends FormWrapper {
 export class PostForm extends FormWrapper {
   constructor(props){
     super(props);
-
-    console.log("profileInfo received by PostForm: " + this.props.profileInfo);
-    console.log(this.props.profileInfo);
-    //WHAT DOES THE BACKEND WANT IN THE BODY FOR A NEW POST?
     this.state = {
       user_id: this.props.profileInfo._id,
       subject: '',
@@ -177,7 +173,6 @@ export class PostForm extends FormWrapper {
       tag: '',
       zipcode: this.props.profileInfo.zipcode,
     };
-    console.log("user_id sent in PostForm(): " + this.state.user_id);
   }
 
   async afterFetch(token) {
