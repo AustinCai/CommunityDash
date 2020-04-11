@@ -1,4 +1,5 @@
 import React from 'react';
+import Select from 'react-select';
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -19,13 +20,20 @@ class FormWrapper extends React.Component {
   }
 
   handleInputChange(event) {
-    const newState = {};
-    newState[event.target.name] = event.target.value;
+    let newState = {};
+
+    if (event.target){
+      newState[event.target.name] = event.target.value;
+    } else { 
+      newState[event.value] = event.label;
+    }
     this.setState(newState);
   }
 
   async handleSubmit(event) {
     event.preventDefault();
+    console.log("handleSubmit() sent: ");
+    console.log(JSON.stringify(this.state));
 
     try {
       const res = await fetch(this.props.endpoint, {
@@ -94,6 +102,7 @@ export class LoginForm extends FormWrapper {
       });
       if (res.ok){
         const resText = await res.text();
+        console.log("returned user profile following login: " + JSON.parse(resText));
         this.props.onProfileFetch(JSON.parse(resText));
         this.props.onAuthenticate(); 
       } else {
@@ -157,23 +166,28 @@ export class PostForm extends FormWrapper {
   constructor(props){
     super(props);
 
+    console.log("profileInfo received by PostForm: " + this.props.profileInfo);
+    console.log(this.props.profileInfo);
     //WHAT DOES THE BACKEND WANT IN THE BODY FOR A NEW POST?
     this.state = {
-      user_id: this.props.profileInfo.user_id,
+      user_id: this.props.profileInfo._id,
       subject: '',
       message: '',
       email: this.props.profileInfo.email,
       tag: '',
       zipcode: this.props.profileInfo.zipcode,
     };
+    console.log("user_id sent in PostForm(): " + this.state.user_id);
   }
 
   async afterFetch(token) {
-    console.log("GET FORUM POSTS");
     this.props.getForumPosts();
   }
 
+
+
   render() {
+
     return (
       <Form>
         <Form.Group>
@@ -186,10 +200,17 @@ export class PostForm extends FormWrapper {
           <Form.Control type="text" name="message" value={this.state.message} onChange={this.handleInputChange} />
         </Form.Group>
 
-        <Form.Group>
-          <Form.Label>Tag</Form.Label>
-          <Form.Control type="text" name="tag" value={this.state.tag} onChange={this.handleInputChange} />
-        </Form.Group>
+        <Select 
+          options={[
+            {label: "Food", value: "tag"}, 
+            {label: "Medicine", value: "tag"}, 
+            {label: "Other", value: "tag"}, 
+          ]} 
+          onChange={this.handleInputChange}
+          placeholder="Select Tag"
+        />
+
+        <br/>
 
         <Button variant="primary" type="submit" onClick={this.handleSubmit}>
           Post

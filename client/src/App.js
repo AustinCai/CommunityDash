@@ -27,7 +27,11 @@ class App extends React.Component {
   }
 
   handleProfileFetch(info){
-    this.setState({profileInfo: info});
+    console.log("info is passed in as: " + info);
+    console.log(info);
+    this.setState({profileInfo: info });
+    console.log("profileInfo on uppermost state: " + this.state.profileInfo);
+    console.log(this.state.profileInfo);
   }
 
     render() {
