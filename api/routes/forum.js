@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { ObjectId } = require("mongodb"); 
-const { check } = require("express-validator");
+const { check, validationResult } = require("express-validator");
 const async = require('async');
 const fetch = require('node-fetch');
 
@@ -25,12 +25,21 @@ router.get("/", (req, res, next) => {
 // UserId and tag should be supplied by front end
 router.post("/post", 
   [
-      check("email", "Please enter a valid email").isEmail(),
+      check("user_id", "Please enter a valid user id").not().isEmpty(),
       check("subject", "Please enter a valid subject").not().isEmpty(),
       check("message", "Please enter a valid message").not().isEmpty(),
-      check("location", "Please enter a valid zipcode").not().isEmpty(),
+      check("email", "Please enter a valid email").isEmail(),
+      check("tag", "Please enter a valid tag").not().isEmpty(),
+      check("zipcode", "Please enter a valid zipcode").not().isEmpty()
   ],
   (req, res, next) => {
+    const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: errors.array()
+            });
+        }
+    
     console.log("router(): forum/post");
     console.log(req.body);
     const {
@@ -160,8 +169,8 @@ router.get("/zipcode/:zipcode", (req, res, next) => {
   async.series([
     function(callback) {
       let Url = 'https://www.zipcodeapi.com/rest/';
-      Url = Url.concat('hudLhTYm7lV8J75D2Iqlr3RNhMhkXX0gr8GJ21PwQKbJCrc4uwXekvVip9p8lKet/');
-      Url = Url.concat(`radius.json/${req.zipcodes[0]}/${req.radius}/mile`);
+      Url = Url.concat('3EYf76hubYPKXxoh5LYKZz3JARC6HclG7YbEsmzzvJOFUFQ3p4b9C05pDyyBopoX');
+      Url = Url.concat(`/radius.json/${req.zipcodes[0]}/${req.radius}/mile`);
       console.log(Url);
       const getZipcodes = async url => {
         try{
