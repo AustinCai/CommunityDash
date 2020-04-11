@@ -146,21 +146,26 @@ router.get("/post/user/:id", (req, res, next) => {
   });
 })
 
-router.use("/zipcode/:zipcode", (req, res, next) => {
+router.use("/zipcode/:zipcode/:radius", (req, res, next) => {
   let zipcode = req.params && req.params.zipcode;
-  zipcode = parseInt(zipcode, 10);
+  let radius = req.params && req.params.radius;
 
   if (!zipcode || isNaN(zipcode)) {
     res.status(404).send(`Zipcode cannot be found.`);
+  } else {
+    zipcode = parseInt(zipcode, 10);
+    req.zipcodes = [zipcode];
   }
-  req.zipcodes = [zipcode];
-  let radius = req.body.radius || "10";
-  req.radius = parseInt(radius, 10);
-
+  if (!radius || isNaN(radius)) {
+    req.radius = 10;
+  } else {
+    radius = parseInt(radius, 10);
+    req.radius = radius
+  }
   next();
 })
 
-router.get("/zipcode/:zipcode", (req, res, next) => {
+router.get("/zipcode/:zipcode/:radius", (req, res, next) => {
   let results = {
     originalPosts: [],
     formattedPosts: []
