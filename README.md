@@ -39,5 +39,6 @@ Radar.io
 Search
 * https://www.algolia.com/doc/guides/building-search-ui/going-further/backend-search/in-depth/backend-instantsearch/react/
 
-Heroku 
+Heroku
 * https://devcenter.heroku.com/articles/config-vars
+* https://devcenter.heroku.com/articles/deploying-nodejs
