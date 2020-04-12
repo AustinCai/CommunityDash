@@ -32,6 +32,7 @@ Chatroom
 * https://www.twilio.com/blog/chat-app-twilio-kendoreact
 * https://www.twilio.com/docs/chat/tutorials/chat-application-node-express
 * https://dev.to/devteam/announcing-the-twilio-hackathon-on-dev-2lh8
+* https://github.com/brandonmowat/react-chat-ui
 
 Radar.io
 * https://radar.io/
