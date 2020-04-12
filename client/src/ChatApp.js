@@ -46,11 +46,11 @@ class ChatApp extends Component {
   setupChatClient(client) {
     this.client = client;
     this.client
-      .getChannelByUniqueName('general2')
+      .getChannelByUniqueName('general-test')
       .then(channel => channel)
       .catch(error => {
         if (error.body.code === 50300) {
-          return this.client.createChannel({ uniqueName: 'general2' });
+          return this.client.createChannel({ uniqueName: 'general-test' });
         } else {
           this.handleError(error);
         }
