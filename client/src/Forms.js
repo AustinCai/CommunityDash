@@ -236,18 +236,23 @@ export class PostForm extends FormWrapper {
 
         <Form.Group>
           <Form.Label>Message</Form.Label>
-          <Form.Control type="text" name="message" value={this.state.message} onChange={this.handleInputChange} />
+          <Form.Control as="textarea" rows="3" type="text" name="message" value={this.state.message} onChange={this.handleInputChange} />
         </Form.Group>
 
-        <Select 
-          options={[
-            {label: "Food", value: "tag"}, 
-            {label: "Medicine", value: "tag"}, 
-            {label: "Other", value: "tag"}, 
-          ]} 
-          onChange={this.handleInputChange}
-          placeholder="Select Tag"
-        />
+        <Form.Group>
+          <Form.Label>Tag</Form.Label>
+          <Select 
+            options={[
+              {label: "Food", value: "tag"}, 
+              {label: "Medicine", value: "tag"},
+              {label: "Emotional", value: "tag"}, 
+              {label: "Donation", value: "tag"},  
+              {label: "Other", value: "tag"}, 
+            ]} 
+            onChange={this.handleInputChange}
+            placeholder="Select Tag"
+          />
+        </Form.Group>
 
         <br/>
 

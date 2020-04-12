@@ -29,14 +29,14 @@ export class LoginScreen extends React.Component {
     return (
       <div style={{textAlign: 'center'}}>
         <Row style={headerStyle}>
-          <Card body style={{backgroundColor: '#4287f5'}}>
+          <Card body style={{backgroundColor: '#4287f5', fontFamily: "Candara"}}>
             <h1><b>Welcome to CommunityDash</b></h1>
           </Card>
         </Row>
 
         <Row style={{paddingTop: '50px'}}>
           <Col sm={{ span: 10, offset: 1 }} md={{ span: 5, offset: 1 }} lg={{ span: 4, offset: 1 }} xl={{ span: 3, offset: 1 }}>
-            <Card body style={{height:'275px'}}>
+            <Card body style={{height:'275px', backgroundColor: '#f9f9f9'}}>
                 <LoginForm 
                   onAuthenticate={this.props.onAuthenticate} 
                   onProfileFetch={this.props.onProfileFetch} 
