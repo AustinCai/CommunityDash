@@ -150,6 +150,8 @@ router.use("/zipcode/:zipcode/:radius", (req, res, next) => {
   let zipcode = req.params && req.params.zipcode;
   let radius = req.params && req.params.radius;
 
+  console.log(`Zipcode: ${zipcode}\nRadius: ${radius}`);
+
   if (!zipcode || isNaN(zipcode)) {
     res.status(404).send(`Zipcode cannot be found.`);
   } else {
@@ -162,6 +164,7 @@ router.use("/zipcode/:zipcode/:radius", (req, res, next) => {
     radius = parseInt(radius, 10);
     req.radius = radius
   }
+  console.log(`Set zipcode to ${req.zipcodes[0]} and radius to ${req.radius}`);
   next();
 })
 
@@ -192,8 +195,8 @@ router.get("/zipcode/:zipcode/:radius", (req, res, next) => {
           });
           callback();
         } catch (err) {
-          console.log("Invalid zipcode or radius");
-          callback(err.message);
+          console.log("Invalid zipcode or radius. Results will be based on given zipcode");
+          callback();
         }
       }
       getZipcodes(Url); 
