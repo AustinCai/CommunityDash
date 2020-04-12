@@ -13,7 +13,7 @@ cd client
 npm install
 npm start
 ```
-#### Tutorials
+#### Resources
 Wireframe
 * https://www.freecodecamp.org/news/create-a-react-frontend-a-node-express-backend-and-connect-them-together-c5798926047c/
 
@@ -25,7 +25,7 @@ Forum and Posts
 * https://stackoverflow.com/questions/14220321/how-do-i-return-the-response-from-an-asynchronous-call
 
 Zipcode/Location
-* https://www.zipcodeapi.com/API
+* https://www.npmjs.com/package/zipcodes?fbclid=IwAR07Ka6l4wq1QA6IvgDrdcCHmhpamwsFlsKhcGnM10KZVuwoA7_VHY3BzGw
 * https://hackersandslackers.com/making-api-requests-with-nodejs/
 
 Chatroom
