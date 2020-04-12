@@ -27,6 +27,8 @@ export class LoginScreen extends React.Component {
         <div className="paddedDiv">
           <LoginForm onAuthenticate={this.props.onAuthenticate} onProfileFetch={this.props.onProfileFetch} endpoint='http://localhost:9000/user/login'/>
         </div>
+        
+        <Button onClick={this.handleShow}>Register</Button>
 
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
@@ -36,9 +38,6 @@ export class LoginScreen extends React.Component {
             <RegisterForm endpoint='http://localhost:9000/user/signup' onClose={this.handleClose}/>
           </Modal.Body>
         </Modal>
-
-        <br/>
-        <Button onClick={this.handleShow}>Register</Button>
       </div>
     );
   }

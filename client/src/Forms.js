@@ -2,6 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -61,35 +62,24 @@ class FormWrapper extends React.Component {
   }
 
   render() {
-    return (
-      <Row>
-        <Col md={{ span: 4, offset: 4 }} lg={{ span: 2, offset: 5 }}>
-          <Form>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" name="email" value={this.state.email} onChange={this.handleInputChange} />
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
-            </Form.Group>
-
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.handleInputChange}/>
-            </Form.Group>
-
-            <Button variant="primary" type="submit" onClick={this.handleSubmit}>
-              Login
-            </Button>
-          </Form>
-        </Col>
-      </Row>
-    );
+    return <p>Default form return.</p>
   }
 }
 
 // handles submit, then fetches profile
 export class LoginForm extends FormWrapper {
+  constructor(props){ 
+    super(props);
+    this.state = {
+      show: false,
+    };
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+
+  handleShow = () => this.setState({show: true});
+  handleClose = () => this.setState({show: false});
 
   async afterFetch(token){
     try {
@@ -111,6 +101,44 @@ export class LoginForm extends FormWrapper {
     } catch (error){
       console.log(error);
     }
+  }
+
+  render() {
+    return (
+      <Row>
+        <Col md={{ span: 4, offset: 4 }} lg={{ span: 2, offset: 5 }}>
+          <Form>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" name="email" value={this.state.email} onChange={this.handleInputChange} />
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.handleInputChange}/>
+            </Form.Group>
+
+            <Button variant="primary" type="submit" onClick={this.handleSubmit}>
+              Login
+            </Button>
+
+            <Button onClick={this.handleShow}>Register</Button>
+          </Form>
+
+          <Modal show={this.state.show} onHide={this.handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Register Account</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <RegisterForm endpoint='http://localhost:9000/user/signup' onClose={this.handleClose}/>
+            </Modal.Body>
+          </Modal>
+        </Col>
+      </Row>
+    );
   }
 }
 
