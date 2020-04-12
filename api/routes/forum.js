@@ -4,6 +4,7 @@ const { ObjectId } = require("mongodb");
 const { check, validationResult } = require("express-validator");
 const async = require('async');
 const fetch = require('node-fetch');
+const zipcodeQuery = require('zipcodes');
 
 const Post = require("../database/postModel/Post");
 const User = require("../database/model/User");
@@ -156,15 +157,22 @@ router.use("/zipcode/:zipcode/:radius", (req, res, next) => {
     res.status(404).send(`Zipcode cannot be found.`);
   } else {
     zipcode = parseInt(zipcode, 10);
-    req.zipcodes = [zipcode];
+    // req.zipcodes = [zipcode];
+    req.zipcode = zipcode;
   }
   if (!radius || isNaN(radius)) {
     req.radius = 10;
   } else {
     radius = parseInt(radius, 10);
-    req.radius = radius
+    req.radius = radius;
   }
-  console.log(`Set zipcode to ${req.zipcodes[0]} and radius to ${req.radius}`);
+
+  console.log(`Set zipcode to ${req.zipcode} and radius to ${req.radius}`);
+
+  // Testing out zipcodes plug-in
+  req.zipcodes = zipcodeQuery.radius(req.zipcode, req.radius).map(zip => parseInt(zip, 10));
+  console.log("Found these zipcodes");
+
   next();
 })
 
@@ -175,32 +183,32 @@ router.get("/zipcode/:zipcode/:radius", (req, res, next) => {
   };
   
   async.series([
-    function(callback) {
-      let Url = 'https://www.zipcodeapi.com/rest/';
-      Url = Url.concat('axh32PZjuGvgfjVt1aUCNca7cCG5EHHRSYUZirctkeRyVLmfOPKWrEh8xgpIi7E0');
-      Url = Url.concat(`/radius.json/${req.zipcodes[0]}/${req.radius}/mile`);
-      console.log(Url);
-      const getZipcodes = async url => {
-        try{
-          let listZipcodes = await fetch(url);
-          const json = await listZipcodes.json();
-          listZipcodes = json.zip_codes;
-          listZipcodes.forEach(geo => {
-            if (geo && geo.zip_code) {
-              const city = parseInt(geo["zip_code"],10);
-              if (!isNaN(city)) {
-                req.zipcodes.push(city);
-              }
-            }
-          });
-          callback();
-        } catch (err) {
-          console.log("Invalid zipcode or radius. Results will be based on given zipcode");
-          callback();
-        }
-      }
-      getZipcodes(Url); 
-    },
+    // function(callback) {
+    //   let Url = 'https://www.zipcodeapi.com/rest/';
+    //   Url = Url.concat('axh32PZjuGvgfjVt1aUCNca7cCG5EHHRSYUZirctkeRyVLmfOPKWrEh8xgpIi7E0');
+    //   Url = Url.concat(`/radius.json/${req.zipcodes[0]}/${req.radius}/mile`);
+    //   console.log(Url);
+    //   const getZipcodes = async url => {
+    //     try{
+    //       let listZipcodes = await fetch(url);
+    //       const json = await listZipcodes.json();
+    //       listZipcodes = json.zip_codes;
+    //       listZipcodes.forEach(geo => {
+    //         if (geo && geo.zip_code) {
+    //           const city = parseInt(geo["zip_code"],10);
+    //           if (!isNaN(city)) {
+    //             req.zipcodes.push(city);
+    //           }
+    //         }
+    //       });
+    //       callback();
+    //     } catch (err) {
+    //       console.log("Invalid zipcode or radius. Results will be based on given zipcode");
+    //       callback();
+    //     }
+    //   }
+    //   getZipcodes(Url); 
+    // },
     function(callback) {
       console.log(req.zipcodes);
       Post.find({"zipcode": {$in: req.zipcodes}}, (err, posts) => {
