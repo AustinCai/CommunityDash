@@ -106,14 +106,11 @@ export class LoginForm extends FormWrapper {
   render() {
     return (
       <Row>
-        <Col md={{ span: 4, offset: 4 }} lg={{ span: 2, offset: 5 }}>
+        <Col md={{ span: 10, offset: 1 }}>
           <Form>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" placeholder="Enter email" name="email" value={this.state.email} onChange={this.handleInputChange} />
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
             </Form.Group>
 
             <Form.Group controlId="formBasicPassword">
@@ -121,16 +118,14 @@ export class LoginForm extends FormWrapper {
               <Form.Control type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.handleInputChange}/>
             </Form.Group>
 
-            <Button variant="primary" type="submit" onClick={this.handleSubmit}>
-              Login
-            </Button>
+            <Button variant="primary" type="submit" onClick={this.handleSubmit}  style={{marginRight:'25px'}}>Login</Button>
 
             <Button onClick={this.handleShow}>Register</Button>
           </Form>
 
           <Modal show={this.state.show} onHide={this.handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>Register Account</Modal.Title>
+              <Modal.Title>Register Account</Modal.Title><br/>
             </Modal.Header>
             <Modal.Body>
               <RegisterForm endpoint='http://localhost:9000/user/signup' onClose={this.handleClose}/>
@@ -157,34 +152,55 @@ export class RegisterForm extends FormWrapper {
   render() {
     return (
       <Form>
-        <Form.Group>
-          <Form.Label>First Name</Form.Label>
-          <Form.Control name="firstName" value={this.state.firstName} onChange={this.handleInputChange} />
-        </Form.Group>
+        <Row>
+          <Col>
+            <Form.Group>
+              <Form.Label>First Name</Form.Label>
+              <Form.Control name="firstName" value={this.state.firstName} onChange={this.handleInputChange} />
+            </Form.Group>
+          </Col>
 
-        <Form.Group>
-          <Form.Label>Last Name</Form.Label>
-          <Form.Control name="lastName" value={this.state.lastName} onChange={this.handleInputChange} />
-        </Form.Group>
+          <Col>
+            <Form.Group>
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control name="lastName" value={this.state.lastName} onChange={this.handleInputChange} />
+            </Form.Group>
+          </Col>
+        </Row>
 
-        <Form.Group>
-          <Form.Label>Email</Form.Label>
-          <Form.Control type="email" name="email" value={this.state.email} onChange={this.handleInputChange} />
-        </Form.Group>
+        <Row>
+          <Col>
+            <Form.Group>
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" name="email" value={this.state.email} onChange={this.handleInputChange} />
+            </Form.Group>
+          </Col>
+
+          <Col>
+            <Form.Group>
+              <Form.Label>ZIP Code</Form.Label>
+              <Form.Control name="zipcode" value={this.state.zipcode} onChange={this.handleInputChange} />
+            </Form.Group>
+          </Col>
+        </Row>
 
         <Form.Group>
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" name="password" value={this.state.password} onChange={this.handleInputChange} />
         </Form.Group>
 
-        <Form.Group>
-          <Form.Label>ZIP Code</Form.Label>
-          <Form.Control name="zipcode" value={this.state.zipcode} onChange={this.handleInputChange} />
-        </Form.Group>
-
-        <Button variant="primary" type="submit" onClick={this.handleSubmit}>
-          Register
-        </Button>
+        <br/>
+        <Row style={{textAlign: 'center'}}>
+          <Col>
+            <Button variant="primary" type="submit" onClick={this.handleSubmit}>
+              Register
+            </Button>
+            <Form.Text className="text-muted">
+              Rest assured, your passwords are encrypyed and we will never share your personal info with anyone else.
+            </Form.Text>
+          </Col>
+        </Row>
+        <br/>
       </Form>
     );
   }

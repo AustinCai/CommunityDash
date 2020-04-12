@@ -1,43 +1,54 @@
 import React from "react";
 
-import Button from "react-bootstrap/Button";
-import Modal from 'react-bootstrap/Modal'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
+import {LoginForm} from './Forms';
 
-import {LoginForm, RegisterForm} from './Forms';
+import Background from './groceries.jpg';
 
+var headerStyle = {
+  minHeight: '40vh',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: 'calc(10px + 2vmin)',
+  color: 'white',
+
+  backgroundImage: `url(${Background})`,
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+}
 
 export class LoginScreen extends React.Component {
-  constructor(props){ 
-    super(props);
-    this.state = {
-      show: false,
-    };
-    this.handleClose = this.handleClose.bind(this);
-  }
-
-  handleShow = () => this.setState({show: true});
-  handleClose = () => this.setState({show: false});
 
   render(){
     return (
-      <div className="App">
-        <header className="App-header" /*style={backgroundImageStyle}*/>
-            <h1 className="App-title">Welcome to CommunityDash!</h1>
-        </header>
-        <div className="paddedDiv">
-          <LoginForm onAuthenticate={this.props.onAuthenticate} onProfileFetch={this.props.onProfileFetch} endpoint='http://localhost:9000/user/login'/>
-        </div>
-        
-        <Button onClick={this.handleShow}>Register</Button>
+      <div style={{textAlign: 'center'}}>
+        <Row style={headerStyle}>
+          <Card body style={{backgroundColor: '#4287f5'}}>
+            <h1><b>Welcome to CommunityDash</b></h1>
+          </Card>
+        </Row>
 
-        <Modal show={this.state.show} onHide={this.handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Register Account</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <RegisterForm endpoint='http://localhost:9000/user/signup' onClose={this.handleClose}/>
-          </Modal.Body>
-        </Modal>
+        <Row style={{paddingTop: '50px'}}>
+          <Col sm={{ span: 10, offset: 1 }} md={{ span: 5, offset: 1 }} lg={{ span: 4, offset: 1 }} xl={{ span: 3, offset: 1 }}>
+            <Card body>
+                <LoginForm 
+                  onAuthenticate={this.props.onAuthenticate} 
+                  onProfileFetch={this.props.onProfileFetch} 
+                  endpoint='http://localhost:9000/user/login'
+                />
+            </Card>
+          </Col>
+          <Col md={{ span: 5, offset: 0 }} lg={{ span: 6, offset: 0 }} xl={{ span: 7, offset: 0 }}>
+            <div stype={{padding: '50px 0'}}>
+                <p>An online platform for helping, and getting help from, your community during this time of crisis.</p>
+            </div>
+          </Col>
+        </Row>
       </div>
     );
   }

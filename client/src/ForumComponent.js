@@ -60,8 +60,6 @@ export class Forum extends React.Component {
     return forumPostsDisplay;
   }
 
-
-
   render() {
     return (
       <div style={{maxHeight: '530px', overflowY: 'auto'}}>
