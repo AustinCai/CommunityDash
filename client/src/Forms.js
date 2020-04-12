@@ -196,7 +196,7 @@ export class RegisterForm extends FormWrapper {
               Register
             </Button>
             <Form.Text className="text-muted">
-              Rest assured, your passwords are encrypyed and we will never share your personal info with anyone else.
+              Rest assured, we encrypt your passwords will never share your personal info.
             </Form.Text>
           </Col>
         </Row>

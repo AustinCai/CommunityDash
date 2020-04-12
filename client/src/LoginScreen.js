@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import {LoginForm} from './Forms';
+import {Textfit} from 'react-textfit';
 
 import Background from './groceries.jpg';
 
@@ -35,7 +36,7 @@ export class LoginScreen extends React.Component {
 
         <Row style={{paddingTop: '50px'}}>
           <Col sm={{ span: 10, offset: 1 }} md={{ span: 5, offset: 1 }} lg={{ span: 4, offset: 1 }} xl={{ span: 3, offset: 1 }}>
-            <Card body>
+            <Card body style={{height:'275px'}}>
                 <LoginForm 
                   onAuthenticate={this.props.onAuthenticate} 
                   onProfileFetch={this.props.onProfileFetch} 
@@ -43,10 +44,10 @@ export class LoginScreen extends React.Component {
                 />
             </Card>
           </Col>
-          <Col md={{ span: 5, offset: 0 }} lg={{ span: 6, offset: 0 }} xl={{ span: 7, offset: 0 }}>
-            <div stype={{padding: '50px 0'}}>
-                <p>An online platform for helping, and getting help from, your community during this time of crisis.</p>
-            </div>
+          <Col sm={{ span: 10, offset: 1 }} md={{ span: 5, offset: 0 }} lg={{ span: 6, offset: 0 }} xl={{ span: 7, offset: 0 }}>
+            <Textfit mode="multi" min={10} style={{color: '#4287f5', height: '275px', fontFamily: "Proxima Nova"}}>
+                <i>"An online platform for helping, and getting help from, your community during this time of crisis."</i>
+            </Textfit>
           </Col>
         </Row>
       </div>
