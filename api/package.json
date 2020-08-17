@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "node ./bin/www",
     "server": "node-env-run server --exec nodemon | pino-colada",
     "dev": "run-p server start"
   },
