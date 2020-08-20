@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 
-// // Deployment
-// const MONGOURI = "mongodb+srv://communitydash:peggyaustinlydia@community-dash-bzucz.mongodb.net/v1";
-
 // Testing
-const MONGOURI = "mongodb+srv://communitydash:peggyaustinlydia@community-dash-bzucz.mongodb.net/test";
+const MONGOURI = process.env.MONGO_KEY;
 
 const InitiateMongoServer = async () => {
   try {
